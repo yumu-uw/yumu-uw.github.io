@@ -9,10 +9,10 @@ import CopyImageButton from "./CopyImageButton";
   import "@github/clipboard-copy-element";
 </script>
 
-<div class={css({ position: "relative", padding: "1em" })}>
+<div class={css({ position: "relative" })}>
   <clipboard-copy
     for={uid}
-    class={css({ position: "absolute", top: "1em", right: "1em" })}
+    class={css({ position: "absolute", top: "0.1em", right: "0.1em" })}
   >
     <CopyImageButton client:only />
   </clipboard-copy>
