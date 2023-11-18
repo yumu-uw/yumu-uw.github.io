@@ -1,0 +1,27 @@
+---
+import { css } from "@styled-system/css";
+import { container } from "@styled-system/patterns";
+
+const prop = Astro.props;
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <div class={css({backgroundColor: "rgb(20, 24, 33)"})}>
+      <div class={container({ maxWidth: "6xl", py: "0.5em" })}>
+        <p class={css({color: "white", fontWeight: "bold", fontSize: "3xl"})}>YUMUの備忘録</p>
+      </div>
+    </div>
+
+    <div class={container({ maxWidth: "6xl", pt: "2em" })}>
+      <slot />
+    </div>
+  </body>
+</html>

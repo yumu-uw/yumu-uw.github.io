@@ -1,0 +1,26 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import SharedLayout from "@/layouts/SharedLayout.astro";
+import { css } from "@styled-system/css";
+import "github-markdown-css/github-markdown-light.css";
+import "@/styles/override.css"
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	console.log(posts);
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await post.render();
+---
+
+<SharedLayout {...post.data}>
+	<div class="markdown-body" class={css({height: '100vh', padding: '1em', backgroundColor: 'white'})}>
+		<Content />
+	</div>
+</SharedLayout>

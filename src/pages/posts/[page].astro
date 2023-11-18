@@ -1,0 +1,40 @@
+---
+import type { GetStaticPathsOptions, MDXInstance } from 'astro';
+import { css } from "@styled-system/css";
+import { container, vstack } from "@styled-system/patterns";
+import PostCard from "@components/PostCard.astro";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+	const allPosts: MDXInstance<Record<string, any>>[] = await Astro.glob("../../content/blog/**/*.mdx");
+	const blogPages =  allPosts.map((p) => {
+		return {
+			title: p.frontmatter.title as string,
+			url: p.url as string,
+			updatedDate: p.frontmatter.updatedDate as string
+		}
+	});
+
+  return paginate(blogPages, { pageSize: 2 });
+}
+const { page } = Astro.props;
+---
+
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body class={css({backgroundColor: "#eeeeee"})}}>
+		<h1>Page {page.currentPage}</h1>
+		<div class={container({maxWidth: "5xl"})}>
+		<div class={vstack({ gap: '6', width: "100%"})} >
+      {page.data.map(({title, url, updatedDate}) => {
+				return <PostCard title={title} purl={url} updatedDate={updatedDate} />
+      })}
+    </div>
+	</div>
+	</body>
+</html>

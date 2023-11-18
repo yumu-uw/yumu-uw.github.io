@@ -1,0 +1,22 @@
+---
+import { css } from "@styled-system/css";
+import { v4 as uuidv4 } from "uuid";
+const uid = uuidv4();
+import CopyImageButton from "./CopyImageButton";
+---
+
+<script>
+  import "@github/clipboard-copy-element";
+</script>
+
+<div class={css({ position: "relative", padding: "1em" })}>
+  <clipboard-copy
+    for={uid}
+    class={css({ position: "absolute", top: "1em", right: "1em" })}
+  >
+    <CopyImageButton client:only />
+  </clipboard-copy>
+  <code id={uid}>
+    <slot />
+  </code>
+</div>
