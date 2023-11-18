@@ -8,6 +8,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://blog.yumu-uw.com',
   integrations: [pandacss(), mdx(), react()],
   markdown: {
     remarkPlugins: [remarkBreaks, remarkFlexibleCodeTitles]
