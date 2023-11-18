@@ -12,5 +12,8 @@ export default defineConfig({
   integrations: [pandacss(), mdx(), react()],
   markdown: {
     remarkPlugins: [remarkBreaks, remarkFlexibleCodeTitles]
+  },
+  redirects: {
+    '/posts': '/posts/1'
   }
 });
