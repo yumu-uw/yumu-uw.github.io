@@ -1,8 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import SharedLayout from "@/layouts/SharedLayout.astro";
-import { css } from "@styled-system/css";
-import "github-markdown-css/github-markdown-light.css";
+import "github-markdown-css/github-markdown-dark.css";
 import "@/styles/override.css"
 
 export async function getStaticPaths() {
@@ -20,7 +19,7 @@ const { Content } = await post.render();
 ---
 
 <SharedLayout {...post.data}>
-	<div class="markdown-body" class={css({height: '100vh', padding: '1em', backgroundColor: 'white'})}>
+	<div class="markdown-body">
 		<Content />
 	</div>
 </SharedLayout>

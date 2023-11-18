@@ -8,6 +8,6 @@ interface Props {
 const {tag} = Astro.props;
 ---
 
-<a class={css({backgroundColor: "gray.300", borderRadius: "0.5em" , py: "0.1em", px: "0.4em"})}>
-  <span>{tag}</span>
+<a class={css({backgroundColor: "gray.500", borderRadius: "0.5em" , py: "0.1em", px: "0.4em"})}>
+  <span class={css({fontSize: "1.1em"})}>{tag}</span>
 </a>

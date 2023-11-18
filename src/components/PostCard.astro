@@ -14,8 +14,9 @@ const url: string = purl?.split("/").at(-2) as string;
 ---
 
 <article class={css({
-  width: "100%", backgroundColor: "gray.200", p: "1em",
-  borderRadius: "0.8em", border: "1px solid black"
+  width: "100%", backgroundColor: "gray.700", p: "1em",
+  borderRadius: "0.8em", border: "1px solid black",
+  color: "white"
 })}>
   <p>{updatedDate}</p>
   <a href=`/posts/${url}`>
