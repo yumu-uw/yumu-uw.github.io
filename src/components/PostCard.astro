@@ -1,19 +1,26 @@
 ---
 import { css } from "@styled-system/css";
+import Tag from "./Tag.astro";
 
 interface Props {
 	title: string;
+  tags: string[];
   purl?: string;
-  updatedDate: string;
+  updatedDate: Date;
 }
 
-const {title, purl, updatedDate} = Astro.props;
+const {title, tags, purl, updatedDate} = Astro.props;
 const url: string = purl?.split("/").at(-2) as string;
 ---
 
 <article class={css({width: "100%", backgroundColor: "white", p: "0.5em", border: "1px solid black"})}>
   <p>{updatedDate}</p>
-  <a href=`/posts/${purl?.split("/").at(-2)}`>
+  <a href=`/posts/${url}`>
     <h2 class={css({fontSize: "2xl", fontWeight: 'bold'})}>{title}</h2>
   </a>
+  <div class={css({display: "flex", gap: 3, pt: "1em"})}>
+    {tags.map((tag) => {
+      return <Tag tag={tag} />
+    })}
+  </div>
 </article>

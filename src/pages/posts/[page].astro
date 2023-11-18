@@ -9,8 +9,9 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 	const blogPages =  allPosts.map((p) => {
 		return {
 			title: p.frontmatter.title as string,
+			tags: p.frontmatter.tags as string[],
 			url: p.url as string,
-			updatedDate: p.frontmatter.updatedDate as string
+			updatedDate: p.frontmatter.updatedDate
 		}
 	});
 
@@ -21,8 +22,8 @@ const { page } = Astro.props;
 
 <SharedLayout>
 	<div class={vstack({ gap: '6', width: "100%"})} >
-		{page.data.map(({title, url, updatedDate}) => {
-			return <PostCard title={title} purl={url} updatedDate={updatedDate} />
+		{page.data.map(({title, tags, url, updatedDate}) => {
+			return <PostCard title={title} tags={tags} purl={url} updatedDate={updatedDate} />
 		})}
 	</div>
 </SharedLayout>

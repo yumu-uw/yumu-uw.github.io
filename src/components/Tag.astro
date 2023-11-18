@@ -1,0 +1,13 @@
+---
+import { css } from "@styled-system/css";
+
+interface Props {
+  tag: string;
+}
+
+const {tag} = Astro.props;
+---
+
+<a class={css({backgroundColor: "gray.300", borderRadius: "0.5em" , py: "0.1em", px: "0.4em"})}>
+  <span>{tag}</span>
+</a>

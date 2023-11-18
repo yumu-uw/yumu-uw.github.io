@@ -9,7 +9,7 @@ const allPosts = await Astro.glob("../content/blog/**/*.mdx");
 <SharedLayout>
 	<div class={vstack({ gap: '6', width: "100%"})} >
 		{allPosts.map((post) => (
-			<PostCard title={post.frontmatter.title} purl={post.url} updatedDate={post.frontmatter.updatedDate} />
+			<PostCard title={post.frontmatter.title} tags={post.frontmatter.tags} purl={post.url} updatedDate={post.frontmatter.updatedDate} />
 		))}
 	</div>
 </SharedLayout>
