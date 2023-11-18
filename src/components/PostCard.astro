@@ -13,7 +13,10 @@ const {title, tags, purl, updatedDate} = Astro.props;
 const url: string = purl?.split("/").at(-2) as string;
 ---
 
-<article class={css({width: "100%", backgroundColor: "white", p: "0.5em", border: "1px solid black"})}>
+<article class={css({
+  width: "100%", backgroundColor: "gray.200", p: "1em",
+  borderRadius: "0.8em", border: "1px solid black"
+})}>
   <p>{updatedDate}</p>
   <a href=`/posts/${url}`>
     <h2 class={css({fontSize: "2xl", fontWeight: 'bold'})}>{title}</h2>
