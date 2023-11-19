@@ -11,3 +11,7 @@
 .markdown-body img.copy-btn:hover {
   background-color: rgba(200, 200, 200, 0.4) !important;
 }
+
+.markdown-body a {
+  color: #93c5fd;
+}
