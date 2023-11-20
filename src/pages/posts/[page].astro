@@ -1,29 +1,44 @@
 ---
-import type { GetStaticPathsOptions, MDXInstance } from 'astro';
+import type { GetStaticPathsOptions, MDXInstance } from "astro";
 import { vstack } from "@styled-system/patterns";
 import PostCard from "@components/PostCard.astro";
-import SharedLayout from '@/layouts/SharedLayout.astro';
+import SharedLayout from "@/layouts/SharedLayout.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-	const allPosts: MDXInstance<Record<string, any>>[] = await Astro.glob("../../content/blog/**/*.mdx");
-	const blogPages =  allPosts.map((p) => {
+	let allPosts: MDXInstance<Record<string, any>>[] = await Astro.glob(
+		"../../content/blog/**/*.mdx",
+	);
+	allPosts = allPosts.sort((a, b) => {
+		return a.frontmatter.updatedDate < b.frontmatter.updatedDate ? 1 : -1;
+	});
+
+	const blogPages = allPosts.map((p) => {
 		return {
 			title: p.frontmatter.title as string,
 			tags: p.frontmatter.tags as string[],
 			url: p.url as string,
-			updatedDate: p.frontmatter.updatedDate
-		}
+			updatedDate: p.frontmatter.updatedDate,
+		};
 	});
 
-  return paginate(blogPages, { pageSize: 10 });
+	return paginate(blogPages, { pageSize: 10 });
 }
 const { page } = Astro.props;
 ---
 
 <SharedLayout>
-	<div class={vstack({ gap: '6', width: "100%"})} >
-		{page.data.map(({title, tags, url, updatedDate}) => {
-			return <PostCard title={title} tags={tags} purl={url} updatedDate={updatedDate} />
-		})}
+	<div class={vstack({ gap: "6", width: "100%" })}>
+		{
+			page.data.map(({ title, tags, url, updatedDate }) => {
+				return (
+					<PostCard
+						title={title}
+						tags={tags}
+						purl={url}
+						updatedDate={updatedDate}
+					/>
+				);
+			})
+		}
 	</div>
 </SharedLayout>
