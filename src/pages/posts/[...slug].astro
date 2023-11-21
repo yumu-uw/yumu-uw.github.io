@@ -2,23 +2,23 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import SharedLayout from "@/layouts/SharedLayout.astro";
 import "github-markdown-css/github-markdown-dark.css";
-import "@/styles/override.css"
+import "@/styles/override.css";
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	const posts = await getCollection("blog");
 	console.log(posts);
 	return posts.map((post) => ({
 		params: { slug: post.slug },
 		props: post,
 	}));
 }
-type Props = CollectionEntry<'blog'>;
+type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 ---
 
-<SharedLayout {...post.data}>
+<SharedLayout headings={headings}>
 	<div class="markdown-body">
 		<Content />
 	</div>

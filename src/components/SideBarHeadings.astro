@@ -1,0 +1,38 @@
+---
+import { css } from "@styled-system/css";
+import type { MarkdownHeading } from "astro";
+interface Props {
+  headings?: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+---
+
+{
+  headings && (
+    <div
+      class={css({
+        marginTop: "1em",
+        backgroundColor: "#374151",
+        borderRadius: "0.8em",
+        fontWeight: 600,
+        padding: "0.5em",
+        width: "100%",
+        minHeight: "200px",
+      })}
+    >
+      <span class={css({display: "block", pb: "0.8em", fontSize: "1.5em", fontWeight: 700})}>目次</span>
+      <ol class={css({paddingLeft: "1em", fontSize: "1em", listStyle: "circle"})}>
+        {headings
+          .filter((h) => h.depth < 3)
+          .map((h, i) => {
+            return (
+              <li class={`toc-level-${h.depth} toc-item`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            );
+          })}
+      </ol>
+    </div>
+  )
+}
