@@ -1,9 +1,15 @@
 ---
-import SideBar from "@/components/SideBar.astro";
+import SideBar from "@/components/SideBarProfile.astro";
+import SideBarHeadings from "@/components/SideBarHeadings.astro";
 import { css } from "@styled-system/css";
 import { container, flex } from "@styled-system/patterns";
+import type { MarkdownHeading } from "astro";
 
-const prop = Astro.props;
+interface Props {
+  headings?: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
 ---
 
 <html lang="ja">
@@ -16,7 +22,7 @@ const prop = Astro.props;
   </head>
   <body class={css({ backgroundColor: "gray.900", color: "white" })}>
     <div class={css({ backgroundColor: "rgb(20, 24, 33)" })}>
-      <div class={container({ maxWidth: "7xl", py: "0.5em" })}>
+      <div class={container({ maxWidth: "8xl", py: "0.5em" })}>
         <a
           href="/"
           class={css({ color: "white", fontWeight: "bold", fontSize: "3xl" })}
@@ -25,19 +31,29 @@ const prop = Astro.props;
       </div>
     </div>
 
-    <div class={container({ maxWidth: "7xl", pt: "2em" })}>
+    <div class={container({ maxWidth: "8xl", pt: "2em" })}>
       <div
         class={flex({
           width: "100%",
-          gap: 8
+          gap: 8,
         })}
       >
         <div class={css({ flex: 1 })}>
           <slot />
         </div>
-        <SideBar />
+        <div
+          class={css({
+            display: ["none", "none", "none", "block"],
+            width: "380px",
+            height: "100%",
+            top: "10px",
+            position: "sticky",
+          })}
+        >
+          <SideBar />
+          <SideBarHeadings headings={headings} />
+        </div>
       </div>
     </div>
-
   </body>
 </html>
