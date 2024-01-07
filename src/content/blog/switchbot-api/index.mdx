@@ -1,0 +1,79 @@
+---
+title: "SwitchBot APIで遊んでみた"
+tags: ["Go", "SwitchBot"]
+pubDate: "2024/1/7"
+updatedDate: "2024/1/7"
+---
+
+import CustomCode from "@components/CustomCode.astro";
+export const components = {code: CustomCode}
+
+# {frontmatter.title}
+
+## 概要
+最近SwitchBotの「[Hub2](https://www.switchbot.jp/products/switchbot-hub2)」と「[Plug Mini](https://www.switchbot.jp/products/switchbot-plug-mini)」を買いました。
+いわゆるIoTデバイスで、スマホアプリと連携して家電の操作をしたり、計測したデータの確認ができます。
+この2つの製品ですが、ざっくり以下のような機能を持っています。
+<div>
+・Hub2 : 温度計や湿度計、赤外線リモコン機能
+・Plug Mini : リモートで家電の電源オン・オフ、消費電力の計測機能
+</div>
+上述したように、スマホアプリを経由して使用するのが一般的な使い方だと思いますが、SwitchBot社が提供しているAPIを使用することで、自作のプログラムからデータを確認したり、機器を操作することも可能です。
+今回はこのAPIを使用して、「Hub2」と「Plug Mini」で計測したデータを取得するツールを作成してみました。（まだ完成してません。。。）
+
+作成したツールは下記のリポジトリで公開しています。
+[https://github.com/yumu-uw/switchbot-api-client](https://github.com/yumu-uw/switchbot-api-client)
+
+## APIの利用方法
+SwitchBot社が用意している下記ページを参照。
+・[【API】新バージョンAPI v1.1を公開しました](https://blog.switchbot.jp/announcement/api-v1-1/)
+・[SwitchBot API v1.1](https://github.com/OpenWonderLabs/SwitchBotAPI)
+
+## 機能
+SwitchBotアカウントに登録したそれぞれのデバイスが計測したデータ（温度、湿度、消費電力など）をAPIから取得できます。
+概要には「Hub2」と「Plug Mini」で計測したデータを取得と書きましたが、実装としてはSwitchBotアカウントに登録されている他のデバイスのデータも取得されます。
+取得したデータの出力方法は、今のところJSONファイルとInfluxDBに対応しています。
+InfluxDBに対応したのは、そのうちGrafanaで可視化でもしてみようと思ったのと、名前だけ知っていて使ったことがなかったのでお試しです。
+
+例として、JSONで出力した場合は以下のようなデータが出力されます。
+
+```json
+[
+  {
+    "DeviceName": "PlugMini_1",
+    "DeviceType": "Plug Mini (JP)",
+    "body": {
+      "deviceId": "#########",
+      "deviceType": "Plug Mini (JP)",
+      "electricCurrent": 3.94,
+      "electricityOfDay": 77,
+      "hubDeviceId": "#########",
+      "power": "on",
+      "version": "V1.5-1.5",
+      "voltage": 104.7,
+      "weight": 43.8
+    },
+    "message": "success",
+    "statusCode": 100
+  },
+  {
+    "DeviceName": "Hub2_1",
+    "DeviceType": "Hub 2",
+    "body": {
+      "deviceId": "#########",
+      "deviceType": "Hub 2",
+      "hubDeviceId": "#########",
+      "humidity": 36,
+      "lightLevel": 4,
+      "temperature": 21.5,
+      "version": "V0.8-0.6"
+    },
+    "message": "success",
+    "statusCode": 100
+  }
+]
+```
+
+## まとめ
+今出来ている部分までですが、SwitchBot APIを利用するための自作ツールについてでした。
+とりあえずで書き始めたコードなので、実装が雑だったり、そもそもデータ集めて何に使うのって気もしますが、せっかくなのでもう少し遊んでみて記事も更新するつもりです。
