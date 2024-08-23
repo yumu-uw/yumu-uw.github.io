@@ -1,7 +1,8 @@
 ---
 import { vstack } from "@styled-system/patterns";
 import PostCard from "@components/PostCard.astro";
-import SharedLayout from "src/layouts/SharedLayout.astro";
+import SharedLayout from "@layouts/SharedLayout.astro";
+
 
 let allPosts = await Astro.glob("../content/blog/**/*.mdx");
 allPosts = allPosts.sort((a, b) => {

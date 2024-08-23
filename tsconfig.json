@@ -6,6 +6,9 @@
       "@/*": [
         "src/*"
       ],
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
       "@components/*": [
         "src/components/*"
       ],
@@ -19,5 +22,9 @@
     "strictNullChecks": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react"
-  }
+  },
+  "include": [
+    "src",
+    "styled-system"
+  ]
 }

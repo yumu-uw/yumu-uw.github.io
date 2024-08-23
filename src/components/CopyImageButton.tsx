@@ -9,10 +9,11 @@ export default function CopyImageButton() {
     setIconSrc(copiedIcon.src);
     setTimeout(() => {
       setIconSrc(copyIcon.src);
-    }, 2000);
+    }, 1500);
   }
 
   return (
-    <img src={iconSrc} alt="Copy" className="copy-btn" onClick={clickHandler}  />
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    <img src={iconSrc} alt="Copy" className="copy-btn" onClick={clickHandler} />
   )
 }

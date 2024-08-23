@@ -1,13 +1,13 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import SharedLayout from "@/layouts/SharedLayout.astro";
+import SharedLayout from "@layouts/SharedLayout.astro";
 import "github-markdown-css/github-markdown-dark.css";
 import "@/styles/override.css";
 
 export async function getStaticPaths() {
 	const posts = await getCollection("blog");
-	console.log(posts);
-	return posts.map((post) => ({
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	return posts.map((post: { slug: any; }) => ({
 		params: { slug: post.slug },
 		props: post,
 	}));
