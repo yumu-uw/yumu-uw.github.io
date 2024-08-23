@@ -13,6 +13,7 @@ export default function CopyImageButton() {
   }
 
   return (
-    <img src={iconSrc} alt="Copy" className="copy-btn" onClick={clickHandler}  />
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    <img src={iconSrc} alt="Copy" className="copy-btn" onClick={clickHandler} />
   )
 }

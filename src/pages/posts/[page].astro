@@ -2,9 +2,10 @@
 import type { GetStaticPathsOptions, MDXInstance } from "astro";
 import { vstack } from "@styled-system/patterns";
 import PostCard from "@components/PostCard.astro";
-import SharedLayout from "@/layouts/SharedLayout.astro";
+import SharedLayout from "@layouts/SharedLayout.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	let allPosts: MDXInstance<Record<string, any>>[] = await Astro.glob(
 		"../../content/blog/**/*.mdx",
 	);
