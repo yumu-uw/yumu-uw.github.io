@@ -9,7 +9,7 @@ export default function CopyImageButton() {
     setIconSrc(copiedIcon.src);
     setTimeout(() => {
       setIconSrc(copyIcon.src);
-    }, 2000);
+    }, 1500);
   }
 
   return (
