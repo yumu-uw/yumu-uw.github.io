@@ -16,6 +16,10 @@
   color: #93c5fd;
 }
 
+.markdown-body pre {
+  white-space: pre-line;
+}
+
 .markdown-body pre.astro-code {
   padding: 0 1em !important;
 }

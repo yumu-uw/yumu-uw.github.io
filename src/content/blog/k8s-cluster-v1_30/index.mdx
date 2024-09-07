@@ -1,0 +1,131 @@
+---
+title: "オンプレ環境でk8s環境の構築（v1.30）"
+tags: ["kubernetes", "k8s", "コンテナ"]
+pubDate: "2024/8/28"
+updatedDate: "2024/8/28"
+---
+
+import CustomCode from "@components/CustomCode.astro";
+export const components = {code: CustomCode}
+
+# {frontmatter.title}
+
+## 概要
+
+今回は、kubeadmを使ってkubernetes環境を構築した手順のメモです。
+
+## 環境
+- OS: Ubuntu 24.04
+- kubernetes: v1.30
+- CNI: cilium
+- Ingress: Traefik
+
+## コントロールプレーン、ワーカーノード共通の作業
+コントロールプレーンとワーカーノードで共通で必要になる、kubernetes関連のモジュールインストールや設定を下記コマンドで実施します。
+都度sudoを付けるのが手間なので、rootユーザーで実行しています。
+```bash
+
+# 下記コマンドは一時的にswapを無効化するだけなので、恒久的に無効化する場合は「/etc/fstab」を編集
+swapoff -a
+
+# containerdのインストール、設定
+apt -y install containerd
+mkdir -p /etc/containerd
+containerd config default | tee /etc/containerd/config.toml
+sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+systemctl restart containerd
+systemctl enable containerd
+
+# kubelet kubeadm kubectlのインストール
+apt-get update
+apt-get install -y apt-transport-https ca-certificates curl
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+# ネットワーク関連の設定
+tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+modprobe overlay
+modprobe br_netfilter
+tee /etc/sysctl.d/kubernetes.conf <<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+net.ipv6.conf.all.forwarding=1
+EOF
+sysctl --system
+
+# kubernetesクラスタの初期化
+# 実行が完了するとクラスタに参加するためのコマンドが出力されます
+# CNIにciliumを使うので、オプションに「--skip-phases=addon/kube-proxy」を付けて、kube-proxyを使わないようにする
+kubeadm init --control-plane-endpoint=「コントロールプレーンにしたいマシンのIP」 --skip-phases=addon/kube-proxy --pod-network-cidr=10.0.0.0/8
+```
+
+## コントロールプレーンでのみ実施（通常ユーザーで実行）
+クラスタを操作するためのkubectlの設定、kubernetes用パッケージマネージャーであるhelmのインストール、CNIとして使用するciliumのインストールを実施します。
+```bash
+
+# kubectlでクラスタにアクセスするための設定をユーザーホームにコピー
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# helm install
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+
+# cilium
+helm repo add cilium https://helm.cilium.io/
+API_SERVER_IP=「コントロールプレーンにしたいマシンのIP」
+API_SERVER_PORT=6443
+helm install cilium cilium/cilium --version 1.15.6 \
+    --namespace kube-system \
+    --set kubeProxyReplacement=true \
+    --set k8sServiceHost=${API_SERVER_IP} \
+    --set k8sServicePort=${API_SERVER_PORT}
+```
+
+## ワーカーノードでのみ実施（通常ユーザーで実行）
+ubuntuのセキュリティ設定で必要になるらしいですが、正直ここはあまりわかってないです。。。  
+```bash
+
+# apparmorの設定
+sudo vim /etc/apparmor.d/cri-containerd.apparmor.d
+# 下記内容を追記
+############################################################################################
+#include <tunables/global>
+profile cri-containerd.apparmor.d flags=(attach_disconnected,mediate_deleted) {
+  # 共通の設定
+  #include <abstractions/base>
+
+  /** rwixk,
+
+  # ネットワーク操作
+  network raw,
+  network bind,
+  network inet stream,
+
+  # キャパビリティ
+  capability kill,
+  capability net_bind_service,
+  capability net_admin,
+
+  # 特定のプロセスへのシグナル送信を許可
+  signal (receive send) peer=unconfined,
+  signal (send,receive) peer=runc,
+}
+############################################################################################
+```
+
+## まとめ
+IngressとしてTraefikを使う設定などもありますが、一旦ここまででクラスターとして稼働はします。
+cert-managerを使ったLets encryptからの証明書取得の方法なども後々書くつもりです。
