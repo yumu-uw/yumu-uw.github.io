@@ -27,6 +27,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@astrojs/partytown": "^2.1.2",
     "@pandacss/dev": "^0.45.1",
     "@types/uuid": "^10.0.0"
   }
