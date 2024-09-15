@@ -5,7 +5,7 @@ import { css } from "@styled-system/css";
 import { container, flex } from "@styled-system/patterns";
 import type { MarkdownHeading } from "astro";
 
-import '@/index.css';
+import "@/index.css";
 
 interface Props {
   headings?: MarkdownHeading[];
@@ -20,6 +20,19 @@ const { headings } = Astro.props;
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <script
+      type="text/partytown"
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-J020W2Y0GS"></script>
+    <script type="text/partytown">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-J020W2Y0GS");
+    </script>
     <title>YUMUの備忘録</title>
   </head>
   <body class={css({ backgroundColor: "gray.900", color: "white" })}>
