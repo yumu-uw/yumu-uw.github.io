@@ -12,7 +12,11 @@ import CopyImageButton from "./CopyImageButton";
 <div class={css({ position: "relative" })}>
   <clipboard-copy
     for={uid}
-    class={css({ position: "absolute", top: "1em", right: "0.1em" })}
+    class={css({
+      position: "absolute",
+      right: "0.1em",
+      cursor: "pointer",
+    })}
   >
     <CopyImageButton client:only />
   </clipboard-copy>
